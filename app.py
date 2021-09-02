@@ -14,9 +14,9 @@ CONNECT_KWARGS = {
 
 """
 TESTING:
-
 while true; do echo $(date) >> /tmp/test.txt; sleep 1; done;
 """
+
 
 @app.route('/')
 def home():
@@ -47,6 +47,7 @@ def stream():
                 return str(e), 500
     except socket.gaierror as e:
         return str(e), 400
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
