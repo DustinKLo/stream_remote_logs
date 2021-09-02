@@ -24,11 +24,11 @@
     }
 
     .loader {
-      border: 12px solid #f3f3f3;
-      border-top: 12px solid #3498db;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 12px;
+      height: 12px;
       animation: spin 2s linear infinite;
     }
 
@@ -85,8 +85,8 @@
 
         fetch("/stream", { method: "POST", body: data })
           .then((res) => {
+            document.querySelector(".loader").style.display = "none";
             if (!res.ok) {
-              document.querySelector(".loader").style.display = "none";
               execute = false;
               clearInterval(cron);
             }
@@ -97,6 +97,10 @@
           .then((d) => {
             document.querySelector("#logs").innerHTML += d;
             window.scrollTo(0, document.body.scrollHeight);
+          })
+          .catch((err) => {
+            execute = false;
+            document.querySelector("#logs").innerHTML += d;
           });
       };
 
