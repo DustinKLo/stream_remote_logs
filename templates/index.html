@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    * {
+      font-family: sans-serif;
+    }
+
+    .page-wrapper {
+      padding: 25px 35px 25px 35px;
+      font-size: 15px;
+    }
+
+    #logs {
+      white-space: pre-wrap;
+      font-family: monospace;
+      white-space: pre;
+      margin: 1em 0;
+    }
+
+    input,
+    label,
+    button {
+      font-size: 20px;
+    }
+
+    .loader {
+      border: 12px solid #f3f3f3;
+      border-top: 12px solid #3498db;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+  <body>
+    <div class="page-wrapper">
+      <h1>Stream logs from remote server</h1>
+      <form id="stream-log-form" onsubmit="event.preventDefault(); onSubmit()">
+        <label for="fname">Host:</label>
+        <input type="text" id="host" name="host" />
+
+        <label for="fname">File Location:</label>
+        <input type="text" id="file-location" name="file-location" />
+
+        <button>Get Logs</button>
+      </form>
+
+      <code>
+        <pre id="logs"></pre>
+      </code>
+      <div class="loader"></div>
+    </div>
+
+    <script>
+      document.querySelector(".loader").style.display = "none";
+      var execute = false; // boolean
+      var cron;
+      var offset = 0;
+
+      const FILE_LOCATION_LS = "file-location";
+      const HOST_LS = "host";
+      var host = document.querySelector("#host");
+      var fileLocation = document.querySelector("#file-location");
+
+      host.value = localStorage.getItem(HOST_LS) || "";
+      fileLocation.value = localStorage.getItem(FILE_LOCATION_LS) || "";
+
+      const getLogs = () => {
+        var data = new FormData();
+        data.append("host", host.value);
+        data.append("location", fileLocation.value);
+        data.append("start", offset);
+
+        document.querySelector(".loader").style.display = "block";
+
+        fetch("/stream", { method: "POST", body: data })
+          .then((res) => {
+            if (!res.ok) {
+              document.querySelector(".loader").style.display = "none";
+              execute = false;
+              clearInterval(cron);
+            }
+            var length = res.headers.get("content-length");
+            offset += parseInt(length);
+            return res.text();
+          })
+          .then((d) => {
+            document.querySelector("#logs").innerHTML += d;
+            window.scrollTo(0, document.body.scrollHeight);
+          });
+      };
+
+      const onSubmit = () => {
+        offset = 0;
+        if (execute === false) {
+          localStorage.setItem(HOST_LS, host.value);
+          localStorage.setItem(FILE_LOCATION_LS, fileLocation.value);
+          execute = true;
+          document.querySelector("#logs").innerHTML = "";
+
+          getLogs();
+          cron = setInterval(() => {
+            getLogs();
+          }, 1500);
+        }
+      };
+    </script>
+  </body>
+</html>
