@@ -23,6 +23,12 @@
       font-size: 20px;
     }
 
+    #stop-logs {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+    }
+
     .loader {
       border: 6px solid #f3f3f3;
       border-top: 6px solid #3498db;
@@ -55,11 +61,14 @@
         <button>Get Logs</button>
       </form>
 
-      <code>
-        <pre id="logs"></pre>
-      </code>
+      <div>
+        <code>
+          <pre id="logs"></pre>
+        </code>
+      </div>
       <div class="loader"></div>
     </div>
+    <button id="stop-logs" onclick="stopLogs()">Stop Logs</button>
 
     <script>
       document.querySelector(".loader").style.display = "none";
@@ -90,7 +99,7 @@
               execute = false;
               clearInterval(cron);
             }
-            var length = res.headers.get("content-length");
+            var length = res.headers.get("Content-Length");
             offset += parseInt(length);
             return res.text();
           })
@@ -99,8 +108,16 @@
             window.scrollTo(0, document.body.scrollHeight);
           })
           .catch((err) => {
+            document.querySelector(".loader").style.display = "none";
             execute = false;
+            clearInterval(cron);
           });
+      };
+
+      const stopLogs = () => {
+        document.querySelector(".loader").style.display = "none";
+        execute = false;
+        clearInterval(cron);
       };
 
       const onSubmit = () => {
