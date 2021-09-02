@@ -11,7 +11,6 @@
     }
 
     #logs {
-      white-space: pre-wrap;
       font-family: monospace;
       white-space: pre;
       margin: 1em 0;
@@ -104,7 +103,7 @@
             return res.text();
           })
           .then((d) => {
-            document.querySelector("#logs").innerHTML += d;
+            document.querySelector("#logs").textContent += d;
             window.scrollTo(0, document.body.scrollHeight);
           })
           .catch((err) => {
