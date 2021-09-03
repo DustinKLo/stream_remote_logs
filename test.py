@@ -10,10 +10,12 @@ if __name__ == '__main__':
     FILE_NAME = sys.argv[1] if len(sys.argv) > 1 else '/tmp/test.log'
 
     logging.basicConfig(
-        filename=FILE_NAME,
-        filemode='w',
+        level=logging.INFO,
         format="[%(asctime)s: %(levelname)s/%(funcName)s] %(message)s",
-        level=logging.INFO
+        handlers=[
+            logging.FileHandler(FILE_NAME, mode='w'),
+            logging.StreamHandler()
+        ]
     )
 
     while True:

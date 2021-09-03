@@ -127,10 +127,13 @@
           execute = true;
           document.querySelector("#logs").innerHTML = "";
 
-          getLogs();
-          cron = setInterval(() => {
-            getLogs();
-          }, 1500);
+          cron = setInterval(
+            (function innerFunc() {
+              getLogs();
+              return innerFunc;
+            })(),
+            1500
+          );
         }
       };
     </script>
