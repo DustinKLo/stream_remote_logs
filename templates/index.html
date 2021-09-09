@@ -1,56 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <style>
-    * {
-      font-family: sans-serif;
-    }
-
-    .page-wrapper {
-      padding: 25px 35px 25px 35px;
-      font-size: 15px;
-    }
-
-    #logs {
-      font-family: monospace;
-      white-space: pre;
-      margin: 1em 0;
-    }
-
-    input,
-    label,
-    button {
-      font-size: 20px;
-    }
-
-    #stop-logs {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-    }
-
-    .loader {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #3498db;
-      border-radius: 50%;
-      width: 12px;
-      height: 12px;
-      animation: spin 2s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static',filename='styles.css') }}"
+  />
 
   <body>
     <div class="page-wrapper">
       <h1>Stream logs from remote server</h1>
-      <form id="stream-log-form" onsubmit="event.preventDefault(); onSubmit()">
+      <form
+        id="stream-log-form"
+        onsubmit="event.preventDefault(); handleSubmit();"
+      >
         <label for="fname">Host:</label>
         <input type="text" id="host" name="host" />
 
@@ -69,73 +31,6 @@
     </div>
     <button id="stop-logs" onclick="stopLogs()">Stop Logs</button>
 
-    <script>
-      document.querySelector(".loader").style.display = "none";
-      var execute = false; // boolean
-      var cron;
-      var offset = 0;
-
-      const FILE_LOCATION_LS = "file-location";
-      const HOST_LS = "host";
-      var host = document.querySelector("#host");
-      var fileLocation = document.querySelector("#file-location");
-
-      host.value = localStorage.getItem(HOST_LS) || "";
-      fileLocation.value = localStorage.getItem(FILE_LOCATION_LS) || "";
-
-      const getLogs = () => {
-        var data = new FormData();
-        data.append("host", host.value);
-        data.append("location", fileLocation.value);
-        data.append("start", offset);
-
-        document.querySelector(".loader").style.display = "block";
-
-        fetch("/stream", { method: "POST", body: data })
-          .then((res) => {
-            document.querySelector(".loader").style.display = "none";
-            if (!res.ok) {
-              execute = false;
-              clearInterval(cron);
-            }
-            var length = res.headers.get("Content-Length");
-            offset += parseInt(length);
-            return res.text();
-          })
-          .then((d) => {
-            document.querySelector("#logs").textContent += d;
-            window.scrollTo(0, document.body.scrollHeight);
-          })
-          .catch((err) => {
-            document.querySelector(".loader").style.display = "none";
-            execute = false;
-            clearInterval(cron);
-          });
-      };
-
-      const stopLogs = () => {
-        document.querySelector(".loader").style.display = "none";
-        execute = false;
-        clearInterval(cron);
-      };
-
-      const onSubmit = () => {
-        offset = 0;
-        if (execute === false) {
-          localStorage.setItem(HOST_LS, host.value);
-          localStorage.setItem(FILE_LOCATION_LS, fileLocation.value);
-          execute = true;
-          document.querySelector("#logs").innerHTML = "";
-
-          cron = setInterval(
-            (function innerFunc() {
-              getLogs();
-              return innerFunc;
-            })(),
-            1500
-          );
-        }
-      };
-    </script>
+    <script src="{{url_for('static', filename='index.js')}}"></script>
   </body>
 </html>

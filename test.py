@@ -18,6 +18,8 @@ if __name__ == '__main__':
         ]
     )
 
+    counter = 1
     while True:
-        logging.info(str(uuid4()))
-        time.sleep(random.uniform(0, 1))
+        logging.info("%d %s" % (counter, str(uuid4())))
+        counter += 1
+        time.sleep(random.uniform(0, 0.5))

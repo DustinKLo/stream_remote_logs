@@ -7,15 +7,10 @@ from fabric.connection import Connection
 app = Flask(__name__)
 app.config.from_pyfile(os.path.join(".", "config/app.conf"), silent=False)
 
-REMOTE_USER = app.config.get('REMOTE_USER')
+REMOTE_USER = app.config['REMOTE_USER']
 CONNECT_KWARGS = {
-    "key_filename": app.config.get('PEM_FILE')
+    "key_filename": app.config['PEM_FILE']
 }
-
-"""
-TESTING:
-while true; do echo $(date) >> /tmp/test.txt; sleep 1; done;
-"""
 
 
 @app.route('/')

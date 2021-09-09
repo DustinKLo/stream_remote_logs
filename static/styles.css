@@ -1,0 +1,44 @@
+* {
+  font-family: sans-serif;
+}
+
+.page-wrapper {
+  padding: 25px 35px 25px 35px;
+  font-size: 15px;
+}
+
+#logs {
+  font-family: monospace;
+  white-space: pre;
+  margin: 1em 0;
+}
+
+input,
+label,
+button {
+  font-size: 20px;
+}
+
+#stop-logs {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+}
+
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
