@@ -9,37 +9,38 @@ const FILE_LOCATION_LS = "file-location";
 const HOST_LS = "host";
 const IS_LOCAL_LS = "is-local";
 
-var hostElement = document.querySelector("#host");
-var fileLocationElement = document.querySelector("#file-location");
+var hostEle = document.querySelector("#host");
+var fileLocationEle = document.querySelector("#file-location");
 
-var isLocalElement = document.querySelector("#is-local");
-var isLocalInitial = localStorage.getItem(IS_LOCAL_LS) === "true" ? true : false;
+var isLocalEle = document.querySelector("#is-local");
+var isLocalInitial =
+  localStorage.getItem(IS_LOCAL_LS) === "true" ? true : false;
 
-isLocalElement.checked = isLocalInitial;
-hostElement.value = localStorage.getItem(HOST_LS) || "";
-fileLocationElement.value = localStorage.getItem(FILE_LOCATION_LS) || "";
+isLocalEle.checked = isLocalInitial;
+if (isLocalInitial)
+  document.querySelector("#host-wrapper").style.display = "none";
 
-if (isLocalInitial) document.querySelector("#host-wrapper").style.display = "none";
+hostEle.value = localStorage.getItem(HOST_LS) || "";
+fileLocationEle.value = localStorage.getItem(FILE_LOCATION_LS) || "";
 
 const toggleHost = () => {
-  const ele = document.querySelector("#is-local");
   const host = document.querySelector("#host-wrapper");
-  if (ele.checked) host.style.display = "none";
+  if (isLocalEle.checked) host.style.display = "none";
   else host.style.display = "inline-block";
 };
 
 const setLS = () => {
-  localStorage.setItem(FILE_LOCATION_LS, fileLocationElement.value);
-  localStorage.setItem(HOST_LS, hostElement.value);
-  localStorage.setItem(IS_LOCAL_LS, isLocalElement.checked);
+  localStorage.setItem(FILE_LOCATION_LS, fileLocationEle.value);
+  localStorage.setItem(HOST_LS, hostEle.value);
+  localStorage.setItem(IS_LOCAL_LS, isLocalEle.checked);
 };
 
 const getLogs = async () => {
-  const isLocal = document.querySelector("#is-local").checked;
+  const isLocal = isLocalEle.checked;
 
   const data = new FormData();
-  if (!isLocal) data.append("host", hostElement.value);
-  data.append("location", fileLocationElement.value);
+  if (!isLocal) data.append("host", hostEle.value);
+  data.append("location", fileLocationEle.value);
   data.append("start", offset);
 
   // promise will resolve when the network call succeeds
