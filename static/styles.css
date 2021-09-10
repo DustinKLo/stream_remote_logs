@@ -7,16 +7,30 @@
   font-size: 15px;
 }
 
-#logs {
+.header {
+  margin-bottom: 10px;
+}
+
+.logs {
   font-family: monospace;
   white-space: pre;
   margin: 1em 0;
+  overflow-y: scroll;
+}
+
+.logs-wrapper {
+  overflow-y: scroll;
+  height: calc(100vh - 15em);
 }
 
 input,
 label,
 button {
   font-size: 20px;
+}
+
+.form-wrapper {
+  display: inline-block;
 }
 
 #stop-logs {

@@ -8,23 +8,33 @@
 
   <body>
     <div class="page-wrapper">
-      <h1>Stream logs from remote server</h1>
-      <form
-        id="stream-log-form"
-        onsubmit="event.preventDefault(); handleSubmit();"
-      >
-        <label for="fname">Host:</label>
-        <input type="text" id="host" name="host" />
+      <div class="header">
+        <h1>Stream logs from remote server</h1>
+        <form
+          id="stream-log-form"
+          onsubmit="event.preventDefault(); handleSubmit();"
+        >
+          <div id="host-wrapper" class="form-wrapper">
+            <label for="fname">Host:</label>
+            <input type="text" id="host" name="host" />
+          </div>
 
-        <label for="fname">File Location:</label>
-        <input type="text" id="file-location" name="file-location" />
+          <div class="form-wrapper">
+            <label for="fname">File Location:</label>
+            <input type="text" id="file-location" name="file-location" />
+          </div>
+          <button>Get Logs</button>
 
-        <button>Get Logs</button>
-      </form>
+          <div>
+            <label for="fname">Local:</label>
+            <input type="checkbox" id="is-local" onchange="toggleHost()" />
+          </div>
+        </form>
+      </div>
 
-      <div>
+      <div class="logs-wrapper">
         <code>
-          <pre id="logs"></pre>
+          <pre class="logs"></pre>
         </code>
       </div>
       <div class="loader"></div>

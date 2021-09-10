@@ -48,5 +48,26 @@ def stream():
         return str(e), 500
 
 
+@app.route('/stream-local', methods=['POST'])
+def stream_local():
+    start = int(request.form.get('start', 0))
+    location = request.form.get('location', None)
+
+    if location is None:
+        return 'location must be supplied', 400
+
+    try:
+        with open(location, 'r') as f:
+            f.seek(start)
+            data = f.read()
+            if type(data) == bytes:
+                data = data.decode('utf-8')
+            return Response(data, content_type='text/plain')
+    except FileNotFoundError as e:
+        return str(e), 404
+    except Exception as e:
+        return str(e), 500
+
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
