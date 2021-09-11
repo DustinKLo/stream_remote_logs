@@ -3,7 +3,6 @@ import socket
 from flask import Flask, request, Response, render_template
 from fabric.connection import Connection
 
-
 app = Flask(__name__)
 app.config.from_pyfile(os.path.join(".", "config/app.conf"), silent=False)
 

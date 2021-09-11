@@ -1,6 +1,7 @@
 "use strict";
 
-document.querySelector(".loader").style.display = "none";
+const loader = document.querySelector(".loader");
+loader.style.display = "none";
 
 let triggerStop = false;
 let offset = 0;
@@ -35,6 +36,7 @@ const setLS = () => {
   localStorage.setItem(IS_LOCAL_LS, isLocalEle.checked);
 };
 
+// retrieves the logs from server
 const getLogs = async () => {
   const isLocal = isLocalEle.checked;
 
@@ -44,46 +46,19 @@ const getLogs = async () => {
   data.append("start", offset);
 
   // promise will resolve when the network call succeeds
-  if (isLocal)
-    var apiCall = fetch("/stream-local", { method: "POST", body: data });
-  else var apiCall = fetch("/stream", { method: "POST", body: data });
-  document.querySelector(".loader").style.display = "block";
+  const url = isLocal ? "/stream-local" : "/stream";
+  var apiCall = fetch(url, { method: "POST", body: data });
+  loader.style.display = "block";
 
   // promise will resolve when X seconds have passed
   const timeout = new Promise((res, _) => setTimeout(res, 2000, null));
 
-  Promise.all([apiCall, timeout])
-    .then(([res, _]) => {
-      if (!res.ok) {
-        triggerStop = false;
-        document.querySelector(".loader").style.display = "none";
-        throw "response bad";
-      }
-      return Promise.resolve(res.text());
-    })
-    .then((d) => {
-      offset += parseInt(d.length);
-      document.querySelector(".logs").textContent += d;
-
-      const logsWrapper = document.querySelector(".logs-wrapper");
-      logsWrapper.scrollTop = logsWrapper.scrollHeight;
-      if (!triggerStop) {
-        document.querySelector(".loader").style.display = "none";
-        getLogs();
-      }
-    })
-    .catch((err) => {
-      triggerStop = false;
-      document.querySelector(".loader").style.display = "none";
-      console.error(err);
-    });
-
-  /* using async await
   try {
+    // waiting for both timeout and network call to finish
     const [res, _] = await Promise.all([apiCall, timeout]);
     if (!res.ok) {
       triggerStop = false;
-      document.querySelector(".loader").style.display = "none";
+      loader.style.display = "none";
       throw res.statusText;
     }
 
@@ -92,25 +67,23 @@ const getLogs = async () => {
     document.querySelector(".logs").textContent += d;
 
     const logsWrapper = document.querySelector(".logs-wrapper");
-    logsWrapper.scrollTop = logsWrapper.scrollHeight;
-    if (!triggerStop) {
-      document.querySelector(".loader").style.display = "none";
-      getLogs();
-    }
+    logsWrapper.scrollTop = logsWrapper.scrollHeight; // scroll to bottom of logs
+
+    if (!triggerStop) loader.style.display = "none";
   } catch (err) {
     triggerStop = false;
-    document.querySelector(".loader").style.display = "none";
+    loader.style.display = "none";
     console.error(err);
   }
-  */
 };
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   offset = 0;
   triggerStop = false;
   clearLogs();
   setLS();
-  getLogs();
+  // await allows us to run this in the background without blocking the event loop
+  while (!triggerStop) await getLogs();
 };
 
 const clearLogs = () => (document.querySelector(".logs").textContent = "");
