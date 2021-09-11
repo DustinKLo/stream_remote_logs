@@ -10,11 +10,11 @@ const FILE_LOCATION_LS = "file-location";
 const HOST_LS = "host";
 const IS_LOCAL_LS = "is-local";
 
-var hostEle = document.querySelector("#host");
-var fileLocationEle = document.querySelector("#file-location");
+let hostEle = document.querySelector("#host");
+let fileLocationEle = document.querySelector("#file-location");
 
-var isLocalEle = document.querySelector("#is-local");
-var isLocalInitial =
+let isLocalEle = document.querySelector("#is-local");
+let isLocalInitial =
   localStorage.getItem(IS_LOCAL_LS) === "true" ? true : false;
 
 isLocalEle.checked = isLocalInitial;
@@ -47,7 +47,7 @@ const getLogs = async () => {
 
   // promise will resolve when the network call succeeds
   const url = isLocal ? "/stream-local" : "/stream";
-  var apiCall = fetch(url, { method: "POST", body: data });
+  let apiCall = fetch(url, { method: "POST", body: data });
   loader.style.display = "block";
 
   // promise will resolve when X seconds have passed
