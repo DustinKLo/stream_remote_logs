@@ -10,24 +10,24 @@ const FILE_LOCATION_LS = "file-location";
 const HOST_LS = "host";
 const IS_LOCAL_LS = "is-local";
 
-let hostEle = document.querySelector("#host");
-let fileLocationEle = document.querySelector("#file-location");
+const hostEle = document.querySelector("#host");
+const hostWrapper = document.querySelector(".host-wrapper");
+const fileLocationEle = document.querySelector("#file-location");
 
-let isLocalEle = document.querySelector("#is-local");
-let isLocalInitial =
+// handling checkbox
+const isLocalEle = document.querySelector("#is-local");
+const isLocalInitial =
   localStorage.getItem(IS_LOCAL_LS) === "true" ? true : false;
 
 isLocalEle.checked = isLocalInitial;
-if (isLocalInitial)
-  document.querySelector("#host-wrapper").style.display = "none";
+if (isLocalInitial) hostWrapper.style.display = "none";
 
 hostEle.value = localStorage.getItem(HOST_LS) || "";
 fileLocationEle.value = localStorage.getItem(FILE_LOCATION_LS) || "";
 
 const toggleHost = () => {
-  const host = document.querySelector("#host-wrapper");
-  if (isLocalEle.checked) host.style.display = "none";
-  else host.style.display = "inline-block";
+  if (isLocalEle.checked) hostWrapper.style.display = "none";
+  else hostWrapper.style.display = "inline-block";
 };
 
 const setLS = () => {
@@ -78,15 +78,13 @@ const getLogs = async () => {
 };
 
 const handleSubmit = async () => {
-  offset = 0;
-  triggerStop = false;
-  clearLogs();
+  [offset, triggerStop] = [0, false];
+  document.querySelector(".logs").textContent = "";
   setLS();
+
   // await allows us to run this in the background without blocking the event loop
   while (!triggerStop) await getLogs();
 };
-
-const clearLogs = () => (document.querySelector(".logs").textContent = "");
 
 const stopLogs = () => {
   triggerStop = true;
