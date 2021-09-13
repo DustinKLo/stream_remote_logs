@@ -14,7 +14,7 @@ $ pip install -r requirements.txt
 
 ### Setup
 
-copy create a config file: `config/app.conf`:
+Create a config file: `config/app.conf`:
 
 ```bash
 PEM_FILE="/absolute/path/to/pem/file"
@@ -40,3 +40,8 @@ $ python app.py
 ```
 
 Open `http://localhost:5000` in your browser, add the values to `Host` and `File Location` and click the button to start "streaming" logs
+
+If you're testing locally check the `Local` box
+
+You can also write random logs by opening a new tab and running the `test.py` script
+![example](./img/example.png)
