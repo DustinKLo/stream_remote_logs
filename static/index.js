@@ -13,6 +13,7 @@ const IS_LOCAL_LS = "is-local";
 const hostEle = document.querySelector("#host");
 const hostWrapper = document.querySelector(".host-wrapper");
 const fileLocationEle = document.querySelector("#file-location");
+const logsEle = document.querySelector(".logs");
 
 // handling checkbox
 const isLocalEle = document.querySelector("#is-local");
@@ -64,7 +65,7 @@ const getLogs = async () => {
 
     const d = await res.text();
     offset += parseInt(d.length);
-    document.querySelector(".logs").textContent += d;
+    logsEle.textContent += d;
 
     const logsWrapper = document.querySelector(".logs-wrapper");
     logsWrapper.scrollTop = logsWrapper.scrollHeight; // scroll to bottom of logs
@@ -79,7 +80,7 @@ const getLogs = async () => {
 
 const handleSubmit = async () => {
   [offset, triggerStop] = [0, false];
-  document.querySelector(".logs").textContent = "";
+  logsEle.textContent = "";
   setLS();
 
   // await allows us to run this in the background without blocking the event loop
@@ -88,5 +89,5 @@ const handleSubmit = async () => {
 
 const stopLogs = () => {
   triggerStop = true;
-  document.querySelector(".loader").style.display = "none";
+  loader.style.display = "none";
 };
